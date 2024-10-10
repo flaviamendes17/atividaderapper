@@ -75,7 +75,20 @@ suspeitosRoutes.get("/", (req, res) => {
         novoSuspeito,
       })
   })
+    suspeitosRoutes.get("/:id", (req, res) => {
+        const { id } = req.params
 
+        const suspeito = suspeitos.find((suspect) => suspect.id == id)
+        
+        if (!suspeito) {
+            return res
+              .status(404)
+              .json({ message: `suspeito com id ${id} não encontrado!` })
+          }
+          return res.status(200).json(suspeito)
+        })
+
+        
 
 
 
