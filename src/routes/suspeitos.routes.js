@@ -90,18 +90,25 @@ suspeitosRoutes.get("/", (req, res) => {
 
         suspeitosRoutes.put("/:id", (req, res) => {
             const { id } = req.params
-            const { nome, idade, envolvido, descricao} = req.body 
+            const { nome, idade, envolvimento, descricao} = req.body 
+            const suspeito = suspeitos.find((suspect) => suspect.id == id);
 
-            const suspeito = suspeitos.find((suspect) => suspect.id == id)
+            // Verifica se o suspeito foi encontrado
+            if (!suspeito) {
+              return res
+                .status(404)
+                .json({ message: `suspeito com id ${id} não encontrado!` });
+            }
+            
 
-            if (!nome || !idade || !envolvido) {
+            if (!nome || !idade || !envolvimento) {
                 return res.status(400).json({
-                  message: "Os campos nome, idade, envolvido sao obrigatorios!",
+                  message: "Os campos nome, idade, envolvimento sao obrigatorios!",
                 })
               }
-              if (envolvido != "sim" && envolvido != "não") {
+              if (envolvimento != "sim" && envolvimento != "não") {
                 return res.status(400).send({
-                  message: "Digite 'sim' ou 'não'! em envolvido",
+                  message: "Digite 'sim' ou 'não'! em envolvimento",
                 })
               }
               if ((Number.isInteger(idade)) == false  ) {
@@ -112,8 +119,8 @@ suspeitosRoutes.get("/", (req, res) => {
             
               suspeito.nome = nome
               suspeito.idade = idade
-              suspeito.envolvido = envolvido
-              suspeito.descriçãoFisica = descricao
+              suspeito.envolvimento = envolvimento
+              suspeito.descricao = descricao
             
               return res.status(200).json({
                 message: "Suspeito atualizado com sucesso!",
